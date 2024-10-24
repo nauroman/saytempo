@@ -400,25 +400,25 @@
 
     let wakeLock = null;
 
-    async function requestWakeLock() {
+    const requestWakeLock = async () => {
         try {
             wakeLock = await navigator.wakeLock.request('screen');
             wakeLock.addEventListener('release', () => {
-                //     console.log('Screen Wake Lock released:', wakeLock.released);
             });
-            //   console.log('Screen Wake Lock acquired:', wakeLock.released);
         } catch (err) {
             console.error(`${err.name}, ${err.message}`);
         }
+    };
+
+    if ('wakeLock' in navigator) {
+        window.addEventListener('load', requestWakeLock);
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                requestWakeLock();
+            }
+        });
     }
-
-    document.addEventListener('visibilitychange', async () => {
-        if (wakeLock !== null && document.visibilityState === 'visible') {
-            await requestWakeLock();
-        }
-    });
-
-    requestWakeLock();
 
 </script>
 </body>
