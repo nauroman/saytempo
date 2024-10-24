@@ -1,6 +1,6 @@
 # Say Tempo
 
-A simple web voice control metronom. 
+A simple web metronom with voice control. 
 
 https://nauroman.github.io/saytempo/
 
