@@ -273,7 +273,10 @@
                     if (!this.audioContext) {
                         this.initAudioContext();
                     }
-                    this.scheduleNote(this.audioContext.currentTime);
+
+                    if (!this.isPlaying) {
+                        this.scheduleNote(this.audioContext.currentTime);
+                    }
 
                     localStorage.setItem('metronomeSoundName', soundName);
                 }
