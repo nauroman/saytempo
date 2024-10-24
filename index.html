@@ -113,7 +113,7 @@
 
 <body>
 <div class="container">
-    <h1>Say Tempo Metronome</h1>
+    <h1>Say Tempo</h1>
     <div class="pulse" id="pulseIndicator"></div>
     <div class="tempo" id="tempoDisplay">80</div>
     <div>
@@ -128,8 +128,8 @@
     <div class="controls">
         <button id="startStop">Start</button>
     </div>
-    <div class="status" id="status">Say a number between 10 and 400 <span id="listeningIndicator"
-                                                                          class="listening-indicator"></span></div>
+    <div class="status" id="status">Please allow microphone access <span id="listeningIndicator"
+                                                                         class="listening-indicator"></span></div>
 </div>
 
 <script>
@@ -300,10 +300,11 @@
     let isRecognitionActive = false;
 
     function startRecognition() {
+
+        showMessage('Please allow microphone access ');
+
         if (!isRecognitionActive) {
             recognition.start();
-            listeningIndicator.classList.remove('error');
-            isRecognitionActive = true;
         }
     }
 
@@ -311,8 +312,6 @@
         if (!metronome.isPlaying) {
             metronome.start();
             startStopButton.textContent = 'Stop';
-            statusElement.textContent = 'Metronome started ';
-            statusElement.appendChild(listeningIndicator);
         }
     }
 
@@ -320,9 +319,17 @@
         if (metronome.isPlaying) {
             metronome.stop();
             startStopButton.textContent = 'Start';
-            statusElement.textContent = 'Metronome stopped ';
-            statusElement.appendChild(listeningIndicator);
         }
+    }
+
+    function showMessage(message) {
+        if (isRecognitionActive) {
+            listeningIndicator.classList.remove('error');
+        } else {
+            listeningIndicator.classList.add('error');
+        }
+        statusElement.textContent = message;
+        statusElement.appendChild(listeningIndicator);
     }
 
     // Auto-start speech recognition when page loads
@@ -339,6 +346,11 @@
         }
 
         startRecognition();
+    });
+
+    recognition.addEventListener('start', () => {
+        isRecognitionActive = true;
+        showMessage('Say a number between 10 and 400 ');
     });
 
     // Handle recognition restart on error
@@ -383,7 +395,7 @@
 
                 if (!isNaN(number) && number >= 10 && number <= 400) {
                     metronome.setTempo(number);
-                    statusElement.textContent = `Tempo set to ${number} BPM `;
+                    //   statusElement.textContent = `Tempo set to ${number} BPM `;
                 }
             }
         }
@@ -393,8 +405,7 @@
         console.error('Speech recognition error:', event.error);
         listeningIndicator.classList.add('error');
         if (event.error === 'not-allowed') {
-            statusElement.textContent = 'Please allow microphone access ';
-            statusElement.appendChild(listeningIndicator);
+            startRecognition();
         }
     };
 
