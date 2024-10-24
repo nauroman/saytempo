@@ -2,6 +2,8 @@
 
 A simple web application to display and control tempo.
 
+https://nauroman.github.io/saytempo/
+
 # Voice Recognition
 
 The application supports voice commands to control the metronome. The following commands are recognized:
